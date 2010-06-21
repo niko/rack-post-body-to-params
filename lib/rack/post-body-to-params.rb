@@ -42,7 +42,10 @@ module Rack
     #
     #   use Rack::PostBodyContentTypeParser,
     #       :content_types => ['application/xml'],
-    #       :parsers => {'application/xml' => Proc.new{|a| my_own_parser a } }
+    #       :parsers => {
+    #         'application/xml' => Proc.new{|a| my_own_xml_parser a },
+    #         'application/foo' => Proc.new{|a| my_foo_parser a }
+    #       }
     #
     def initialize(app, config={})
       @content_types = config.delete(:content_types) || [APPLICATION_JSON, APPLICATION_XML]

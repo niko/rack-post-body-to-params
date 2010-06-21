@@ -5,7 +5,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "rack-post-body-to-params"
-    gem.summary = %Q{Parse the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.}
+    gem.summary = %Q{Parses the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.}
     
     gem.email = "mail+git@niko-dittmann.com"
     gem.homepage = "http://github.com/niko/rack-post-body-to-params"

@@ -1,6 +1,29 @@
-= rack-post-body-to-params
+= Rack::PostBodyToParams
 
-Description goes here.
+Parses the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.
+
+You want to build a XMl or JSON API not with Rails? Perhaps Sinatra[http://www.sinatrarb.com/] or Padrino[http://www.padrinorb.com/]? Are you missing the Rails feature that the body of XML and JSON POST or PUT requests are automatically parsed into the params hash? Here you go!
+
+There is something similar already in the {rack-contrib gem}[http://github.com/rack/rack-contrib] called Rack::PostBodyContentTypeParser. Besides being even less creative with the naming Rack::PostBodyToParams sports these features:
+
+* Parses XML as well.
+* Uses ActiveSupport. This may also considered to be a bug but it's in almost every web-framework anyway. The following features sort of depend on it.
+* Uses ActiveSupports settings for XML & JSON parsing, mainly the parser that's used. Including Nokogiri[http://nokogiri.org/] and YAJL[http://github.com/brianmario/yajl-ruby] for more speed and less memory consumption.
+* Parsers are configurable.
+* Parse errors are returned with as status 400 and the error message of the parser.
+
+== Howto use
+
+  use PostBodyToParams
+
+or
+
+  use Rack::PostBodyContentTypeParser,
+         :content_types => ['application/xml'],
+         :parsers => {
+           'application/xml' => Proc.new{|a| my_own_xml_parser a },
+           'application/foo' => Proc.new{|a| my_foo_parser a }
+         }
 
 == Note on Patches/Pull Requests
  
