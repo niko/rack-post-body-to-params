@@ -14,6 +14,14 @@ There is something similar already in the {rack-contrib gem}[http://github.com/r
 
 == Howto use
 
+just
+
+  gem install rack-post-body-to-params
+
+(sorry for the name ;-)
+
+and then in your config.ru or app.rb:
+
   use PostBodyToParams
 
 or
