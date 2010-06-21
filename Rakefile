@@ -5,13 +5,14 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "rack-post-body-to-params"
-    gem.summary = %Q{Parse the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Parse the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.}
+    
     gem.email = "mail+git@niko-dittmann.com"
     gem.homepage = "http://github.com/niko/rack-post-body-to-params"
     gem.authors = ["Niko Dittmann"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    
+    gem.add_development_dependency "shoulda", ">= 0"
+    gem.add_runtime_dependency "activesupport", ">= 2.3"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
