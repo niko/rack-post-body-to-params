@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/rack/post-body-to-params.rb",
+     "rack-post-body-to-params.gemspec",
      "test/helper.rb",
      "test/test_post-body-to-params.rb"
   ]
@@ -30,7 +31,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Parse the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.}
+  s.summary = %q{Parses the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.}
   s.test_files = [
     "test/helper.rb",
      "test/test_post-body-to-params.rb"
