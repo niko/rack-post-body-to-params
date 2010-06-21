@@ -22,7 +22,8 @@ just
 
 and then in your config.ru or app.rb:
 
-  use PostBodyToParams
+  require 'rack/post-body-to-params'
+  use Rack::PostBodyToParams
 
 or
 
