@@ -25,6 +25,22 @@ or
            'application/foo' => Proc.new{|a| my_foo_parser a }
          }
 
+As you can see you can restrict Rack::PostBodyToParams to only respond to 'application/xml' or 'application/json'.
+
+Make shure ActiveSupport is required and configured. Should look somewhat like this:
+
+  ActiveSupport::JSON.backend = 'Yajl'
+  ActiveSupport::XmlMini.backend = 'Nokogiri'
+
+Note that all current versions of ActiveSupport (up to 3.0.0.beta4) have a bug when requiring the yajl gem. See here for details:
+{Rails Ticket 4897}[https://rails.lighthouseapp.com/projects/8994/tickets/4897-yajl-backend-discovery-fails-in-activesupportjson].
+
+Either you have to patch your ActiveSupport gem or use another parser:
+
+  ActiveSupport::JSON.backend = 'YAML'
+
+== This is early release software. Bug reports and (even more so) fixes are highly welcome!
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
