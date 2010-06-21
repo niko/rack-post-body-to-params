@@ -84,4 +84,40 @@ class TestPostBodyToParams < Test::Unit::TestCase
     end
   end
   
+  context "the app itself" do
+    setup do
+      @test_app = TestApp.new
+      @app = Rack::PostBodyToParams.new @test_app
+    end
+    should "put json string data into the form_hash" do
+      env = {
+        'CONTENT_TYPE' => 'application/json',
+        'rack.input' => StringIO.new('{"bla":"blub"}')
+      }
+      new_env = @app.call(env)
+      assert_equal({"bla"=>"blub"}, new_env['rack.request.form_hash'])
+      assert_equal env['rack.input'], new_env['rack.request.form_input']
+    end
+    should "return 400 and the error message on faulty json" do
+      env = {
+        'CONTENT_TYPE' => 'application/json',
+        'rack.input' => StringIO.new('{"bla":"blub"}}')
+      }
+      code, header, body = @app.call(env)
+      assert_equal 400, code
+      assert_equal 'application/json', header['Content-Type']
+      assert_match /json-syntax-error/, body.first
+    end
+    should "return 400 and the error message on faulty xml" do
+      env = {
+        'CONTENT_TYPE' => 'application/xml',
+        'rack.input' => StringIO.new("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<track>\n<title>\nfo\n</title>")
+      }
+      code, header, body = @app.call(env)
+      assert_equal 400, code
+      assert_equal 'application/xml', header['Content-Type']
+      assert_match /xml-syntax-error/, body.first
+    end
+  end
+  
 end
