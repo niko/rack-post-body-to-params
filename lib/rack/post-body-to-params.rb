@@ -1,5 +1,5 @@
 # gem 'activesupport', '=2.3.8'
-gem 'activesupport', '=3.0.0.beta4'
+# gem 'activesupport', '=3.0.0.beta4' # for tests
 require 'active_support'
 require 'active_support/core_ext/hash'
 
