@@ -83,8 +83,9 @@ module Rack
       content_type = env[CONTENT_TYPE]
       
       if @content_types.include? content_type
+        post_body = env[POST_BODY].read
         begin
-          new_form_hash = parsers[content_type].call env[POST_BODY].read
+          new_form_hash = parsers[content_type].call post_body
         rescue Exception => error
           logger.warn "#{self.class} #{content_type} parsing error: #{error.to_s}" if respond_to? :logger
           return error_responses[content_type].call error
