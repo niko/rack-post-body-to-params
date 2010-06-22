@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Niko Dittmann"]
-  s.date = %q{2010-06-21}
+  s.date = %q{2010-06-22}
   s.email = %q{mail+git@niko-dittmann.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Parses the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.}
+  s.summary = %q{A Rack middleware that parses the POST or PUT body for JSON or XML content to a Hash and puts it into the rack.request.form_hash. Most frameworks get the params hash from there. Uses ActiveSupport and the respective parsers for parsing. So you can set it up to use Nokogiri and YajL. Useful for example when writing JSON and XML API apps with Sinatra or Padrino.}
   s.test_files = [
     "test/helper.rb",
      "test/test_post-body-to-params.rb"
