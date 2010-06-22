@@ -84,13 +84,17 @@ module Rack
       
       if @content_types.include? content_type
         post_body = env[POST_BODY].read
-        begin
-          new_form_hash = parsers[content_type].call post_body
-        rescue Exception => error
-          logger.warn "#{self.class} #{content_type} parsing error: #{error.to_s}" if respond_to? :logger
-          return error_responses[content_type].call error
+        
+        unless post_body.blank?
+          begin
+            new_form_hash = parsers[content_type].call post_body
+          rescue Exception => error
+            logger.warn "#{self.class} #{content_type} parsing error: #{error.to_s}" if respond_to? :logger
+            return error_responses[content_type].call error
+          end
+          env.update(FORM_HASH => new_form_hash, FORM_INPUT => env[POST_BODY])
         end
-        env.update(FORM_HASH => new_form_hash, FORM_INPUT => env[POST_BODY])
+        
       end
       
       @app.call(env)
