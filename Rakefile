@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "rack-post-body-to-params"
-    gem.summary = %Q{Parses the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.}
-    
+    gem.summary = %Q{A Rack middleware that parses the POST or PUT body for JSON or XML content to a Hash and puts it into the rack.request.form_hash. Most frameworks get the params hash from there. Uses ActiveSupport and the respective parsers for parsing. So you can set it up to use Nokogiri and YajL. Useful for example when writing JSON and XML API apps with Sinatra or Padrino.}
+    # gem.description = %Q{}
     gem.email = "mail+git@niko-dittmann.com"
     gem.homepage = "http://github.com/niko/rack-post-body-to-params"
     gem.authors = ["Niko Dittmann"]
