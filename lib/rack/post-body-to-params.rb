@@ -81,6 +81,7 @@ module Rack
 
     def call(env)
       content_type = env[CONTENT_TYPE]
+      content_type = content_type.split(';').first
       
       if @content_types.include? content_type
         post_body = env[POST_BODY].read
