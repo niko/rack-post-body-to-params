@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "rack-post-body-to-params"
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Niko Dittmann"]
