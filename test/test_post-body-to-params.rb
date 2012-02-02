@@ -98,7 +98,7 @@ class TestPostBodyToParams < Test::Unit::TestCase
       assert_equal({"bla"=>"blub"}, new_env['rack.request.form_hash'])
       assert_equal env['rack.input'], new_env['rack.request.form_input']
     end
-    should "put work with charset specification, too" do
+    should "work with charset specification, too" do
       env = {
         'CONTENT_TYPE' => 'application/json; charset=ISO-8859-1',
         'rack.input' => StringIO.new('{"bla":"blub"}')
@@ -106,6 +106,12 @@ class TestPostBodyToParams < Test::Unit::TestCase
       new_env = @app.call(env)
       assert_equal({"bla"=>"blub"}, new_env['rack.request.form_hash'])
       assert_equal env['rack.input'], new_env['rack.request.form_input']
+    end
+    should "work without any content type" do
+      env = {
+        'rack.input' => StringIO.new('{"bla":"blub"}')
+      }
+      new_env = @app.call(env) # doesnt raise
     end
     should "return 400 and the error message on faulty json" do
       env = {

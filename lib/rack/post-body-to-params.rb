@@ -80,10 +80,9 @@ module Rack
     end
 
     def call(env)
-      content_type = env[CONTENT_TYPE]
-      content_type = content_type.split(';').first
+      content_type = env[CONTENT_TYPE] && env[CONTENT_TYPE].split(';').first
       
-      if @content_types.include? content_type
+      if content_type && @content_types.include?(content_type)
         post_body = env[POST_BODY].read
         
         unless post_body.blank?
