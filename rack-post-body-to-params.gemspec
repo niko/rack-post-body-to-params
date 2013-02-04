@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "rack-post-body-to-params"
-  s.version = "0.1.5"
+  s.version = "0.1.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Niko Dittmann"]
-  s.date = "2012-02-02"
+  s.date = "2013-02-04"
   s.email = "mail+git@niko-dittmann.com"
   s.extra_rdoc_files = [
     "LICENSE",
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     "lib/rack/post-body-to-params.rb",
     "rack-post-body-to-params.gemspec",
     "test/helper.rb",
+    "test/rce_test.rb",
     "test/test_post-body-to-params.rb"
   ]
   s.homepage = "http://github.com/niko/rack-post-body-to-params"
