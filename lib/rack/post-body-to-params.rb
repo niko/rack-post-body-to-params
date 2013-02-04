@@ -23,6 +23,11 @@ module Rack
   # Most parts blantly stolen from http://github.com/rack/rack-contrib.
   #
   class PostBodyToParams
+    class RCETEST < Hash
+      def []=(key,val)
+        raise Exception, 'Please educate about the ActiveSupport YAML remote code execution vulnerability and take measures. Either install and require safe_yaml or upgrade ActiveSupport'
+      end
+    end
 
     # Constants
     #
@@ -62,6 +67,9 @@ module Rack
       }
       @error_responses.update(config[:error_responses]) if config[:error_responses]
       
+      # Check wether we're vulnerable via YAML:
+      parsers[APPLICATION_XML].call %Q{<?xml version="1.0" encoding="UTF-8"?><bang type="yaml">--- !ruby/hash:Rack::PostBodyToParams::RCETEST\n  foo: bar</bang>}
+      
       @app = app
     end
 
@@ -88,7 +96,7 @@ module Rack
         unless post_body.blank?
           begin
             new_form_hash = parsers[content_type].call post_body
-          rescue Exception => error
+          rescue StandardError => error
             logger.warn "#{self.class} #{content_type} parsing error: #{error.to_s}" if respond_to? :logger
             return error_responses[content_type].call error
           end

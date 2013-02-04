@@ -9,18 +9,6 @@ class TestApp
   end
 end
 
-module FromXml
-  def from_xml(data)
-    "parsed #{data}"
-  end
-end
-
-class Logger
-  def warn(string)
-    "warning: #{string}"
-  end
-end
-
 class TestPostBodyToParams < Test::Unit::TestCase
   
   context "A new app" do

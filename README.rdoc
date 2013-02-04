@@ -1,3 +1,7 @@
+= Security advice
+
+Rack::PostBodyToParams is affected by every Rails security issue induced by YAML deserialization for HTTP POST bodys as it just uses ActionSupport for that. You should either upgrade ActiveSupport or require 'safe_yaml'. As of version 0.1.6 Rack::PostBodyToParams will  prevent you from initializing if Hash.from_xml is unsafe.
+
 = Rack::PostBodyToParams
 
 Parses the POST or PUT body to a Hash and put it into the FORM_HASH. Most frameworks get the params hash from there.
