@@ -54,22 +54,29 @@ module Rack
     #
     def initialize(app, config={})
       @content_types = config.delete(:content_types) || [APPLICATION_JSON, APPLICATION_XML]
-      
+
       @parsers = {
         APPLICATION_JSON => Proc.new{ |post_body| parse_as_json post_body },
         APPLICATION_XML =>  Proc.new{ |post_body| parse_as_xml  post_body }
       }
       @parsers.update(config[:parsers]) if config[:parsers]
-      
+
       @error_responses = {
         APPLICATION_JSON => Proc.new{ |error| json_error_response error },
         APPLICATION_XML =>  Proc.new{ |error| xml_error_response  error }
       }
       @error_responses.update(config[:error_responses]) if config[:error_responses]
-      
+
       # Check wether we're vulnerable via YAML:
-      parsers[APPLICATION_XML].call %Q{<?xml version="1.0" encoding="UTF-8"?><bang type="yaml">--- !ruby/hash:Rack::PostBodyToParams::RCETEST\n  foo: bar</bang>}
-      
+      begin
+        parsers[APPLICATION_XML].call %Q{<?xml version="1.0" encoding="UTF-8"?><bang type="yaml">--- !ruby/hash:Rack::PostBodyToParams::RCETEST\n  foo: bar</bang>}
+      rescue Exception => e
+        # If ActiveSupport caught the error, we're safe. Otherwise, exception.
+        unless e.kind_of?(Hash::DisallowedType)
+          raise Exception, 'Please educate about the ActiveSupport YAML remote code execution vulnerability and take measures. Either install and require safe_yaml or upgrade ActiveSupport'
+        end
+      end
+
       @app = app
     end
 
@@ -89,10 +96,10 @@ module Rack
 
     def call(env)
       content_type = env[CONTENT_TYPE] && env[CONTENT_TYPE].split(';').first
-      
+
       if content_type && @content_types.include?(content_type)
         post_body = env[POST_BODY].read
-        
+
         unless post_body.blank?
           begin
             new_form_hash = parsers[content_type].call post_body
@@ -102,9 +109,9 @@ module Rack
           end
           env.update(FORM_HASH => new_form_hash, FORM_INPUT => env[POST_BODY])
         end
-        
+
       end
-      
+
       @app.call(env)
     end
 
