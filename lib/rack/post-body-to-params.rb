@@ -72,7 +72,12 @@ module Rack
         parsers[APPLICATION_XML].call %Q{<?xml version="1.0" encoding="UTF-8"?><bang type="yaml">--- !ruby/hash:Rack::PostBodyToParams::RCETEST\n  foo: bar</bang>}
       rescue Exception => e
         # If ActiveSupport caught the error, we're safe. Otherwise, exception.
-        unless e.kind_of?(Hash::DisallowedType)
+        # Support ActiveSupport 3.2.x (Hash::DisallowedType) and
+        # ActiveSupport 4.x (ActiveSupport::XMLConverter::DisallowedType)
+        unless Hash.const_defined?("DisallowedType") ||
+          (Kernel.const_defined?("ActiveSupport") &&
+            ActiveSupport.const_defined?("XMLConverter") &&
+            ActiveSupport::XMLConverter.const_defined?("DisallowedType"))
           raise Exception, 'Please educate about the ActiveSupport YAML remote code execution vulnerability and take measures. Either install and require safe_yaml or upgrade ActiveSupport'
         end
       end
