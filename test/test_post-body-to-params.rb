@@ -121,6 +121,31 @@ class TestPostBodyToParams < Test::Unit::TestCase
       assert_equal 'application/xml', header['Content-Type']
       assert_match /xml-syntax-error/, body.first
     end
+    should "check at init to make sure yaml parsing will not happen" do
+      test_app = TestApp.new
+      if Hash.const_defined?("DisallowedType")
+        Hash::DISALLOWED_XML_TYPES.delete("yaml")
+        begin
+          assert_raise Rack::PostBodyToParams::YamlNotSafe do
+            Rack::PostBodyToParams.new test_app
+          end
+        ensure
+          Hash::DISALLOWED_XML_TYPES << "yaml"
+        end
+      elsif Kernel.const_defined?("ActiveSupport") &&
+          ActiveSupport.const_defined?("XMLConverter") &&
+          ActiveSupport::XMLConverter.const_defined?("DisallowedType")
+        ActiveSupport::XMLConverter::DISALLOWED_TYPES.delete("yaml")
+        begin
+          assert_raise Rack::PostBodyToParams::YamlNotSafe do
+            Rack::PostBodyToParams.new test_app
+          end
+        ensure
+          ActiveSupport::XMLConverter::DISALLOWED_TYPES << "yaml"
+        end
+      end
+    end
+      
   end
   
 end
