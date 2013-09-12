@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "rack-post-body-to-params"
-  s.version = "0.1.7"
+  s.version = "0.1.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Niko Dittmann"]
-  s.date = "2013-02-05"
+  s.date = "2013-09-12"
   s.email = "mail+git@niko-dittmann.com"
   s.extra_rdoc_files = [
     "LICENSE",
@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/niko/rack-post-body-to-params"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.25"
   s.summary = "A Rack middleware that parses the POST or PUT body for JSON or XML content to a Hash and puts it into the rack.request.form_hash. Most frameworks get the params hash from there. Uses ActiveSupport and the respective parsers for parsing. So you can set it up to use Nokogiri and YajL. Useful for example when writing JSON and XML API apps with Sinatra or Padrino."
 
   if s.respond_to? :specification_version then
