@@ -2,6 +2,7 @@
 # gem 'activesupport', '=3.0.0.beta4' # for tests
 require 'active_support'
 require 'active_support/core_ext/hash'
+require 'rack/multipart/parser'
 
 module Rack
 
@@ -100,8 +101,29 @@ module Rack
     def call(env)
       content_type = env[CONTENT_TYPE] && env[CONTENT_TYPE].split(';').first
 
+      # Check for multipart and use body from multipart
+      files = {}
+      if content_type.eql?("multipart/mixed")
+        root = env[CONTENT_TYPE][/.* start=(?:"((?:\\.|[^\"])*)"|([^;\s]*))/ni] && ($1 || $2)
+        part_type = env[CONTENT_TYPE][/.* type=(?:"((?:\\.|[^\"])*)"|([^;\s]*))/ni] && ($1 || $2)
+        if @content_types.include?(part_type)
+          content_type = part_type
+
+          unless env[FORM_HASH]
+            # This should only happen if Rack isn't available (like in tests)
+            multipart_parser = Rack::Multipart::Parser.new(env)
+            env[FORM_HASH] = multipart_parser.parse
+          end
+
+          post_body = env[FORM_HASH].delete(root)
+
+          # Get files and put them in a hash to be merged with the params later
+          env[FORM_HASH].each {|k,v| files[k] = v if v.key?(:filename) && v.key?(:tempfile)}
+        end
+      end
+
       if content_type && @content_types.include?(content_type)
-        post_body = env[POST_BODY].read
+        post_body ||= env[POST_BODY].read
 
         unless post_body.blank?
           begin
@@ -110,6 +132,10 @@ module Rack
             logger.warn "#{self.class} #{content_type} parsing error: #{error.to_s}" if respond_to? :logger
             return error_responses[content_type].call error
           end
+
+          # Merge files from multipart (merges empty hash when not multipart)
+          new_form_hash.merge!(files)
+
           env.update(FORM_HASH => new_form_hash, FORM_INPUT => env[POST_BODY])
         end
 
