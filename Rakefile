@@ -12,6 +12,7 @@ begin
     gem.authors = ["Niko Dittmann"]
     
     gem.add_development_dependency "shoulda", ">= 0"
+    gem.add_runtime_dependency "rack", ">= 1.0"
     gem.add_runtime_dependency "activesupport", ">= 2.3"
   end
   Jeweler::GemcutterTasks.new

@@ -146,6 +146,37 @@ class TestPostBodyToParams < Test::Unit::TestCase
       end
     end
       
+    should "process multipart requests that contain a root part of proper type" do
+      body = <<-EOS
+--MultipartBoundary\r
+Content-Disposition: form-data; name="json"\r
+Content-Type: "application/json; charset=UTF-8"\r
+\r
+{"bla":"blub"}\r
+\r
+--MultipartBoundary\r
+Content-Disposition: form-data; name="multipart_file"; filename="multipart_file"\r
+Content-Length: 22\r
+Content-Type: text/plain\r
+Content-Transfer-Encoding: binary\r
+\r
+file content goes here\r
+--MultipartBoundary--\r
+      EOS
+
+      env = {
+        'CONTENT_TYPE' => 'multipart/mixed; boundary="MultipartBoundary"; type="application/json"; start="json"',
+        'rack.input' => StringIO.new(body)
+      }
+      new_env = @app.call(env)
+      assert_equal(["bla", "multipart_file"].sort, new_env['rack.request.form_hash'].keys.sort)
+      assert_equal(new_env['rack.request.form_hash']["bla"], "blub")
+      file = new_env['rack.request.form_hash']["multipart_file"]
+      assert file && file.is_a?(Hash)
+      assert file.key?(:filename)
+      assert file.key?(:tempfile)
+    end
+
   end
   
 end
